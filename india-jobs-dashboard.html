@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ateshh — India Jobs Market</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #1e1e2e;
+    --accent: #ff6b35;
+    --accent2: #ffd60a;
+    --accent3: #06d6a0;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --tag-bg: #1e1e2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 3rem 2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    z-index: 1;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .brand-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-title span { color: var(--accent); }
+
+  .api-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .api-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* MAIN LAYOUT */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* SETUP BANNER */
+  .setup-banner {
+    background: linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,214,10,0.05));
+    border: 1px solid rgba(255,107,53,0.3);
+    border-radius: 1rem;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .setup-banner .icon { font-size: 1.5rem; }
+
+  .setup-banner-text { flex: 1; min-width: 200px; }
+
+  .setup-banner-text strong {
+    display: block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+  }
+
+  .setup-banner-text p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .setup-banner a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* SEARCH SECTION */
+  .search-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1.2rem;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .search-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+  }
+
+  @media (max-width: 640px) {
+    .search-grid { grid-template-columns: 1fr; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    padding: 0.8rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+
+  .field select option { background: var(--surface); }
+
+  .search-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 0.7rem;
+    padding: 0.85rem 2rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover {
+    background: #ff8555;
+    transform: translateY(-1px);
+  }
+
+  .search-btn:active { transform: translateY(0); }
+
+  /* QUICK TAGS */
+  .quick-tags {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .quick-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .tag {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--accent); }
+
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-value span { color: var(--accent); }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* RESULTS */
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .results-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .results-count {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* JOB CARDS */
+  .jobs-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .job-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.2s;
+    animation: fadeUp 0.4s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .job-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+  }
+
+  .job-card:hover {
+    border-color: rgba(255,107,53,0.3);
+    transform: translateX(4px);
+  }
+
+  .job-card:hover::before { transform: scaleY(1); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .job-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .job-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .job-company {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  .job-salary {
+    background: rgba(6,214,160,0.1);
+    border: 1px solid rgba(6,214,160,0.2);
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent3);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--tag-bg);
+    border-radius: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .job-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .apply-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 0.5rem;
+    padding: 0.45rem 1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .apply-btn:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* SALARY SECTION */
+  .salary-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .salary-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .salary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .salary-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    padding: 1rem;
+  }
+
+  .salary-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .salary-bars { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .salary-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .bar-label { color: var(--muted); width: 55px; flex-shrink: 0; }
+
+  .bar-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .bar-value { color: var(--text); font-weight: 500; width: 60px; text-align: right; flex-shrink: 0; }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+  }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EMPTY STATE */
+  .empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+  /* INSIGHTS PILL */
+  .insight-bar {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    scrollbar-width: none;
+  }
+
+  .insight-bar::-webkit-scrollbar { display: none; }
+
+  .insight-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .insight-pill strong { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="brand-name">Ateshh MCP</span>
+    <h1 class="brand-title">India <span>Jobs</span> Market</h1>
+  </div>
+  <div class="api-badge">
+    <div class="api-dot"></div>
+    <span id="api-status">Demo Mode — Add API key for live data</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- SETUP BANNER -->
+  <div class="setup-banner">
+    <div class="icon">🔑</div>
+    <div class="setup-banner-text">
+      <strong>Connect to Live Job Data</strong>
+      <p>Get free API key at <a href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch" target="_blank">RapidAPI JSearch</a> — 500 free requests/month. Then set <code style="color:var(--accent2)">JSEARCH_API_KEY</code> in your MCP server env.</p>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value"><span>2.3</span>M+</div>
+      <div class="stat-label">Active Listings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><span>15</span></div>
+      <div class="stat-label">Cities Covered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><span>340</span>%</div>
+      <div class="stat-label">AI Jobs Growth</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><span>18</span>%</div>
+      <div class="stat-label">Avg Salary Growth</div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS TICKER -->
+  <div class="insight-bar">
+    <div class="insight-pill">🔥 AI/ML: <strong>+340% YoY</strong></div>
+    <div class="insight-pill">🏙️ Bangalore: <strong>35% of IT jobs</strong></div>
+    <div class="insight-pill">💰 Senior Dev avg: <strong>₹32L PA</strong></div>
+    <div class="insight-pill">📈 Cybersecurity: <strong>+280% demand</strong></div>
+    <div class="insight-pill">🌍 Remote India jobs: <strong>+45% in 2026</strong></div>
+    <div class="insight-pill">🎓 Python: <strong>#1 demanded skill</strong></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-grid">
+      <div class="field">
+        <label>Job Role</label>
+        <input type="text" id="role-input" placeholder="e.g. Software Engineer, Data Analyst" value="Software Engineer">
+      </div>
+      <div class="field">
+        <label>City</label>
+        <select id="city-select">
+          <option value="India">All India</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Bangalore">Bangalore</option>
+          <option value="Delhi">Delhi / NCR</option>
+          <option value="Hyderabad">Hyderabad</option>
+          <option value="Pune">Pune</option>
+          <option value="Chennai">Chennai</option>
+          <option value="Kolkata">Kolkata</option>
+          <option value="Ahmedabad">Ahmedabad</option>
+          <option value="Jaipur">Jaipur</option>
+          <option value="Kochi">Kochi</option>
+        </select>
+      </div>
+      <button class="search-btn" onclick="searchJobs()">Search Jobs →</button>
+    </div>
+    <div class="quick-tags">
+      <span class="quick-label">Quick:</span>
+      <span class="tag" onclick="quickSearch('Software Engineer')">Software Engineer</span>
+      <span class="tag" onclick="quickSearch('Data Analyst')">Data Analyst</span>
+      <span class="tag" onclick="quickSearch('Product Manager')">Product Manager</span>
+      <span class="tag" onclick="quickSearch('Content Writer')">Content Writer</span>
+      <span class="tag" onclick="quickSearch('Sales Executive')">Sales Executive</span>
+      <span class="tag" onclick="quickSearch('CA Finance')">CA / Finance</span>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-header">
+    <div class="results-title" id="results-title">Recent Listings</div>
+    <div class="results-count" id="results-count"></div>
+  </div>
+
+  <div class="jobs-grid" id="jobs-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading jobs...</p>
+    </div>
+  </div>
+
+  <!-- SALARY BENCHMARKS -->
+  <div class="salary-section">
+    <div class="salary-title">💰 India Salary Benchmarks 2026</div>
+    <div class="salary-grid" id="salary-grid"></div>
+  </div>
+
+</div>
+
+<script>
+// ── DEMO JOB DATA ─────────────────────────────
+const DEMO_JOBS = {
+  "Software Engineer": [
+    { title: "Senior Software Engineer", company: "Infosys", city: "Bangalore", type: "Full Time", salary: "₹18L - ₹28L PA", desc: "5+ years in Java/Python. Work on scalable microservices architecture. Remote-friendly team.", link: "https://infosys.com/careers", date: "Today" },
+    { title: "Software Engineer - Backend", company: "Flipkart", city: "Bangalore", type: "Full Time", salary: "₹12L - ₹20L PA", desc: "Build high-performance backend services. Node.js/Go preferred. Great perks & ESOP.", link: "https://flipkart.com/careers", date: "2 days ago" },
+    { title: "Junior Software Engineer", company: "TCS", city: "Mumbai", type: "Full Time", salary: "₹3.5L - ₹6L PA", desc: "Fresh graduates welcome. Training provided. Work on enterprise client projects.", link: "https://tcs.com/careers", date: "1 day ago" },
+    { title: "Full Stack Developer", company: "Razorpay", city: "Bangalore", type: "Full Time", salary: "₹15L - ₹25L PA", desc: "React + Node.js stack. High-growth fintech startup. Exciting equity package.", link: "https://razorpay.com/careers", date: "3 days ago" },
+    { title: "Software Engineer - AI/ML", company: "Google India", city: "Hyderabad", type: "Full Time", salary: "₹35L - ₹60L PA", desc: "Build ML pipelines at scale. PhD or 4+ years ML experience required.", link: "https://careers.google.com", date: "Today" },
+  ],
+  "Data Analyst": [
+    { title: "Senior Data Analyst", company: "Swiggy", city: "Bangalore", type: "Full Time", salary: "₹10L - ₹18L PA", desc: "SQL, Python, Tableau. Analyze food delivery patterns for 500M+ orders.", link: "https://swiggy.com/careers", date: "Today" },
+    { title: "Data Analyst - Growth", company: "PhonePe", city: "Bangalore", type: "Full Time", salary: "₹8L - ₹14L PA", desc: "Drive growth analytics for India's leading UPI platform. Excel + Python required.", link: "https://phonepe.com/careers", date: "1 day ago" },
+    { title: "Business Data Analyst", company: "Mahindra", city: "Mumbai", type: "Full Time", salary: "₹6L - ₹12L PA", desc: "Power BI and SQL expertise. 2+ years experience in manufacturing or auto sector preferred.", link: "https://mahindra.com/careers", date: "4 days ago" },
+  ],
+  "Product Manager": [
+    { title: "Senior Product Manager", company: "Zomato", city: "Gurugram", type: "Full Time", salary: "₹25L - ₹45L PA", desc: "Own the discovery product for 100M+ users. MBA + 5 years PM experience required.", link: "https://zomato.com/careers", date: "Today" },
+    { title: "Product Manager - Payments", company: "Paytm", city: "Noida", type: "Full Time", salary: "₹20L - ₹35L PA", desc: "Drive India's payments ecosystem. Work with engineering, design, and business teams.", link: "https://paytm.com/careers", date: "2 days ago" },
+  ],
+  "Content Writer": [
+    { title: "Senior Content Writer", company: "HubSpot India", city: "Remote", type: "Remote", salary: "₹6L - ₹12L PA", desc: "Write B2B marketing content. 3+ years experience. Fluent English essential.", link: "https://hubspot.com/careers", date: "Today" },
+    { title: "Hindi Content Writer", company: "Dainik Bhaskar", city: "Indore", type: "Full Time", salary: "₹3L - ₹5L PA", desc: "Fluent Hindi writing. News and editorial content for India's largest newspaper.", link: "https://bhaskar.com/careers", date: "3 days ago" },
+    { title: "Video Script Writer", company: "MX Player", city: "Mumbai", type: "Full Time", salary: "₹5L - ₹9L PA", desc: "Write scripts for digital series and short films. OTT experience preferred.", link: "https://mxplayer.com/careers", date: "1 day ago" },
+  ],
+  "Sales Executive": [
+    { title: "Senior Sales Executive", company: "HDFC Life", city: "Mumbai", type: "Full Time", salary: "₹4L - ₹8L PA + incentives", desc: "Sell life insurance products. Strong Hindi + English. Field + office mix.", link: "https://hdfclife.com/careers", date: "Today" },
+    { title: "B2B Sales Executive", company: "Zoho", city: "Chennai", type: "Full Time", salary: "₹5L - ₹10L PA", desc: "Sell Zoho's SaaS products to SMBs across India. Great incentive structure.", link: "https://zoho.com/careers", date: "2 days ago" },
+  ],
+  "default": [
+    { title: "Business Development Manager", company: "Amazon India", city: "Mumbai", type: "Full Time", salary: "₹15L - ₹25L PA", desc: "Drive seller growth on Amazon.in. 5+ years BD experience. Hindi + English required.", link: "https://amazon.com/careers", date: "Today" },
+    { title: "Operations Manager", company: "Delhivery", city: "Delhi", type: "Full Time", salary: "₹8L - ₹15L PA", desc: "Manage last-mile delivery operations for 100+ delivery agents. Logistics experience needed.", link: "https://delhivery.com/careers", date: "1 day ago" },
+    { title: "HR Business Partner", company: "Wipro", city: "Bangalore", type: "Full Time", salary: "₹7L - ₹13L PA", desc: "Partner with business units on talent management. MBA HR preferred.", link: "https://wipro.com/careers", date: "3 days ago" },
+  ]
+};
+
+const SALARY_DATA = [
+  { role: "Software Engineer", fresher: 35, mid: 130, senior: 320, maxBar: 350 },
+  { role: "Data Analyst", fresher: 25, mid: 100, senior: 250, maxBar: 280 },
+  { role: "Product Manager", fresher: 90, mid: 220, senior: 550, maxBar: 600 },
+  { role: "Financial Analyst", fresher: 28, mid: 90, senior: 200, maxBar: 250 },
+  { role: "Content Writer", fresher: 18, mid: 60, senior: 140, maxBar: 180 },
+  { role: "Sales Executive", fresher: 25, mid: 70, senior: 180, maxBar: 220 },
+];
+
+// ── SEARCH ─────────────────────────────────────
+function quickSearch(role) {
+  document.getElementById('role-input').value = role;
+  searchJobs();
+}
+
+function searchJobs() {
+  const role = document.getElementById('role-input').value.trim() || 'Software Engineer';
+  const city = document.getElementById('city-select').value;
+
+  document.getElementById('results-title').textContent = `${role} — ${city}`;
+  document.getElementById('jobs-container').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Searching jobs...</p>
+    </div>`;
+
+  setTimeout(() => {
+    const key = Object.keys(DEMO_JOBS).find(k => role.toLowerCase().includes(k.toLowerCase())) || 'default';
+    let jobs = DEMO_JOBS[key] || DEMO_JOBS['default'];
+
+    // Filter by city if not "All India"
+    if (city !== 'India') {
+      const filtered = jobs.filter(j => j.city.toLowerCase().includes(city.toLowerCase()) || j.city === 'Remote');
+      jobs = filtered.length > 0 ? filtered : jobs;
+    }
+
+    document.getElementById('results-count').textContent = `${jobs.length} listings found`;
+    renderJobs(jobs);
+  }, 700);
+}
+
+function renderJobs(jobs) {
+  if (!jobs.length) {
+    document.getElementById('jobs-container').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🔍</div>
+        <p>No jobs found. Try a different role or city.</p>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('jobs-container').innerHTML = jobs.map((job, i) => `
+    <div class="job-card" style="animation-delay:${i * 0.07}s">
+      <div class="job-top">
+        <div>
+          <div class="job-title">${job.title}</div>
+          <div class="job-company">${job.company}</div>
+        </div>
+        <div class="job-salary">${job.salary}</div>
+      </div>
+      <div class="job-meta">
+        <div class="meta-chip">📍 ${job.city}</div>
+        <div class="meta-chip">💼 ${job.type}</div>
+        <div class="meta-chip">📅 ${job.date}</div>
+      </div>
+      <div class="job-desc">${job.desc}</div>
+      <a class="apply-btn" href="${job.link}" target="_blank">Apply Now →</a>
+    </div>
+  `).join('');
+}
+
+// ── SALARY CHART ──────────────────────────────
+function renderSalary() {
+  const colors = ['#ff6b35', '#ffd60a', '#06d6a0'];
+  document.getElementById('salary-grid').innerHTML = SALARY_DATA.map(s => `
+    <div class="salary-item">
+      <div class="salary-role">${s.role}</div>
+      <div class="salary-bars">
+        ${[
+          { label: 'Fresher', val: s.fresher, color: colors[0] },
+          { label: 'Mid', val: s.mid, color: colors[1] },
+          { label: 'Senior', val: s.senior, color: colors[2] },
+        ].map(b => `
+          <div class="salary-bar-row">
+            <span class="bar-label">${b.label}</span>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${(b.val/s.maxBar)*100}%;background:${b.color}"></div>
+            </div>
+            <span class="bar-value">${b.val >= 100 ? (b.val/100).toFixed(1)+'L' : b.val+'K'}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── INIT ──────────────────────────────────────
+renderSalary();
+searchJobs();
+</script>
+</body>
+</html>
