@@ -112,8 +112,8 @@ Drag `dashboard/index.html` to [netlify.com/drop](https://app.netlify.com/drop) 
 
 Want hosted API access without running it yourself?
 
-📧 Email: your@email.com
-💬 WhatsApp: +91 XXXXX XXXXX
+📧 Email: ateshh.s@gmail.com  
+💬 WhatsApp: +91 9699711712
 
 ---
 
